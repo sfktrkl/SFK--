@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -72,8 +72,21 @@ void Parser(std::vector<std::string> tokens)
 	{
 		if (tokens[i] == "YAZDIR")
 		{
-			std::cout << tokens[i + 1] << std::endl;
-			i += 2;
+			if (tokens.size() > i + 1)
+			{
+				if (tokens[i + 1] != "")
+				{
+					std::cout << tokens[i + 1] << std::endl;
+					i += 2;
+				}
+			}
+			else
+			{
+				std::cout << "------------------------------------------------------------" << std::endl;
+				std::cout << "SOZ DIZIMI HATASI: YAZDIR FONKSIYONU PARAMETREYI BULAMADI!!!" << std::endl;
+				return;
+			}
+			
 		}
 	}
 }

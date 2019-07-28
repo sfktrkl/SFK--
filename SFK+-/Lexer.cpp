@@ -1,8 +1,7 @@
 #include "main.h"
 
-const std::vector<std::pair<TokenType, std::string>> Lexer(const std::string& fileContents)
+const void Lexer(const std::string& fileContents, toks& tokens)
 {
-	std::vector<std::pair<TokenType, std::string>> tokens;
 	std::string token = "";
 	bool state = false;
 	std::string text = "";
@@ -38,24 +37,42 @@ const std::vector<std::pair<TokenType, std::string>> Lexer(const std::string& fi
 				tokens.push_back(std::make_pair(TokenType::NUMBER, expression));
 				expression = "";
 			}
-			else if (variable != "")
+			else if (variable != "" && variableStarted == true)
 			{
 				tokens.push_back(std::make_pair(TokenType::VARIABLE, variable));
 				variable = "";
 				variableStarted = false;
 			}
 			if (token == "<EOF>")
-				return tokens;
+				return;
 
 			token = "";
 		}
 		else if (token == "=" && state == false)
 		{
-			tokens.push_back(std::make_pair(TokenType::VARIABLE, variable));
-			tokens.push_back(std::make_pair(TokenType::EQUALS, ""));
-			variable = "";
+			if (variable != "" && variableStarted == true)
+			{
+				tokens.push_back(std::make_pair(TokenType::VARIABLE, variable));
+				tokens.push_back(std::make_pair(TokenType::EQUALS, ""));
+				variable = "";
+				variableStarted = false;
+			}
+			else if (expression != "" && isExpression == true)
+			{
+				tokens.push_back(std::make_pair(TokenType::EXPRESSION, expression));
+				tokens.push_back(std::make_pair(TokenType::EQUALS, ""));
+				expression = "";
+				isExpression = false;
+			}
+			else if (expression != "" && isExpression == false)
+			{
+				tokens.push_back(std::make_pair(TokenType::NUMBER, expression));
+				tokens.push_back(std::make_pair(TokenType::EQUALS, ""));
+				expression = "";
+			}
+			else if (tokens.back().first == TokenType::EQUALS)
+				tokens.back().first = TokenType::EQEQ;
 			token = "";
-			variableStarted = false;
 		}
 		else if (token == "$" && state == false)
 		{
@@ -75,6 +92,29 @@ const std::vector<std::pair<TokenType, std::string>> Lexer(const std::string& fi
 		else if (token == "YAZDIR")
 		{
 			tokens.push_back(std::make_pair(TokenType::KEYWORD, token));
+			token = "";
+		}
+		else if (token == "BITIR")
+		{
+			tokens.push_back(std::make_pair(TokenType::KEYWORD, token));
+			token = "";
+		}
+		else if (token == "EGER")
+		{
+			tokens.push_back(std::make_pair(TokenType::KEYWORD, token));
+			token = "";
+		}
+		else if (token == "ISE")
+		{
+			if (expression != "" && isExpression == true)
+			{
+				tokens.push_back(std::make_pair(TokenType::EXPRESSION, expression));
+				isExpression = false;
+			}
+			else if (expression != "" && isExpression == false)
+				tokens.push_back(std::make_pair(TokenType::NUMBER, expression));
+			tokens.push_back(std::make_pair(TokenType::KEYWORD, token));
+			expression = "";
 			token = "";
 		}
 		else if (token == "GIRDI")
@@ -108,12 +148,14 @@ const std::vector<std::pair<TokenType, std::string>> Lexer(const std::string& fi
 				token = "";
 			}
 		}
+		else if (token == "\t")
+		{
+			token = "";
+		}
 		else if (state == true)
 		{
 			text += token;
 			token = "";
 		}
 	}
-
-	return tokens;
 }

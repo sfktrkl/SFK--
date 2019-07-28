@@ -27,6 +27,9 @@
     <ClCompile Include="Supplement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Conditioner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="test.sfk">

@@ -13,7 +13,10 @@ enum class TokenType
 	NUMBER,
 	EXPRESSION,
 	VARIABLE,
-	EQUALS
+	EQUALS,
+	EQEQ,
+	STATEMENT,
+	CONDITION
 };
 
 enum class VariableType
@@ -38,10 +41,14 @@ public:
 	VariableType getType() const { return this->variableType; }
 };
 
+typedef std::vector<std::pair<TokenType, std::string>> toks;
+typedef std::unordered_map<std::string, Variable> vars;
+
 void Print(std::string text, bool error = false);
 const std::string OpenFile(const char* filename);
 const std::string EvaluateExpression(std::string expression);
-const std::vector<std::pair<TokenType, std::string>> Lexer(const std::string& fileContents);
-const std::unordered_map<std::string, Variable> Parser(std::vector<std::pair<TokenType, std::string>>& tokens);
-const bool checkKey(const std::unordered_map<std::string, Variable>& variables, const std::string key);
+const void Lexer(const std::string& fileContents, toks& tokens);
+const void Conditioner(toks& tokens, std::vector<toks>& ifTokens);
+const void Parser(toks& tokens, vars& variables);
+const bool checkKey(const vars& variables, const std::string key);
 const std::pair<VariableType, std::string> Scan();

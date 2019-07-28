@@ -1,8 +1,9 @@
 #include "main.h"
 
-const std::unordered_map<std::string, Variable> Parser(std::vector<std::pair<TokenType, std::string>>& tokens)
+const void Parser(toks& tokens, vars& variables)
 {
-	std::unordered_map<std::string, Variable> variables;
+	std::vector<toks> ifTokens;
+	Conditioner(tokens, ifTokens);
 
 	std::size_t i = 0;
 	while (i < tokens.size())
@@ -25,7 +26,7 @@ const std::unordered_map<std::string, Variable> Parser(std::vector<std::pair<Tok
 					catch (const char* result)
 					{
 						Print(result, true);
-						return variables;
+						return;
 					}
 				}
 				else if (tokens[i + 1].first == TokenType::VARIABLE)
@@ -35,20 +36,20 @@ const std::unordered_map<std::string, Variable> Parser(std::vector<std::pair<Tok
 					else
 					{
 						Print("SOZ DIZIMI HATASI : DEGISKEN BULUNAMADI", true);
-						return variables;
+						return;
 					}
 				}
 				else
 				{
 					Print("SOZ DIZIMI HATASI: YAZDIR FONKSIYONU HATALI PARAMETRE GIRISI!", true);
-					return variables;
+					return;
 				}
 				i += 1;
 			}
 			else
 			{
 				Print("SOZ DIZIMI HATASI: YAZDIR FONKSIYONU PARAMETREYI BULAMADI!", true);
-				return variables;
+				return;
 			}
 		}
 		else if (tokens[i].first == TokenType::VARIABLE)
@@ -76,7 +77,7 @@ const std::unordered_map<std::string, Variable> Parser(std::vector<std::pair<Tok
 							catch (const char* result)
 							{
 								Print(result, true);
-								return variables;
+								return;
 							}
 						}
 						else if (tokens[i + 2].first == TokenType::VARIABLE)
@@ -86,7 +87,7 @@ const std::unordered_map<std::string, Variable> Parser(std::vector<std::pair<Tok
 							else
 							{
 								Print("SOZ DIZIMI HATASI : DEGISKEN BULUNAMADI", true);
-								return variables;
+								return;
 							}
 						}
 						i += 1;
@@ -94,7 +95,7 @@ const std::unordered_map<std::string, Variable> Parser(std::vector<std::pair<Tok
 					else
 					{
 						Print("SOZ DIZIMI HATASI: DEGISKEN PARAMETRESI BULUNAMADI!", true);
-						return variables;
+						return;
 					}
 					i += 1;
 				}
@@ -125,32 +126,48 @@ const std::unordered_map<std::string, Variable> Parser(std::vector<std::pair<Tok
 						else
 						{
 							Print("SOZ DIZIMI HATASI: GIRDI FONKSIYONU DEGISKEN BULUNAMADI!", true);
-							return variables;
+							return;
 						}
 						i += 1;
 					}
 					else
 					{
 						Print("SOZ DIZIMI HATASI: DEGISKEN PARAMETRESI BULUNAMADI!", true);
-						return variables;
+						return;
 					}
 					i += 1;
 				}
 				else
 				{
 					Print("SOZ DIZIMI HATASI: GIRDI FONKSIYONU HATALI PARAMETRE(MESAJ)!", true);
-					return variables;
+					return;
 				}
 
 			}
 			else
 			{
 				Print("SOZ DIZIMI HATASI: MESAJ BULUNAMADI!", true);
-				return variables;
+				return;
+			}
+		}
+		else if (tokens[i].first == TokenType::STATEMENT)
+		{
+			if (tokens[i + 1].first == TokenType::CONDITION && tokens[i + 1].second == "TRUE")
+			{
+				Parser(ifTokens[std::stoi(tokens[i].second)], variables);
+				i += 1;
+			}
+			else if (tokens[i + 1].first == TokenType::CONDITION && tokens[i + 1].second == "FALSE")
+			{
+				i += 1;
+			}
+			else
+			{
+				Print("SOZ DIZIMI HATASI: KOSUL BULUNAMADI!", true);
+				return;
 			}
 		}
 		i += 1;
 	}
 
-	return variables;
 }

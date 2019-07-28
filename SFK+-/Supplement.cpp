@@ -105,7 +105,7 @@ const std::string EvaluateExpression(std::string expression)
 	return std::to_string(result);
 }
 
-const bool checkKey(const std::unordered_map<std::string, Variable>& variables, const std::string key)
+const bool checkKey(const vars& variables, const std::string key)
 {
 	if (variables.find(key) == variables.end())
 		return false;
@@ -118,8 +118,8 @@ const std::pair<VariableType, std::string> Scan()
 	std::pair<VariableType, std::string> data;
 	std::string input;
 	std::getline(std::cin, input);
-
-	std::vector<std::pair<TokenType, std::string>> tokens = Lexer(input + "\n");
+	toks tokens;
+	Lexer(input + "\n", tokens);
 
 	if (tokens.size() != 0)
 	{

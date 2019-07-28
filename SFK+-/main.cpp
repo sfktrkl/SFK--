@@ -21,8 +21,11 @@ int main(int argc, const char *argv[])
 		}
 	}
 
-	std::vector<std::pair<TokenType, std::string>> tokens = Lexer(fileContents);
-	std::unordered_map<std::string, Variable> variables = Parser(tokens);
+	toks tokens;
+	vars variables;
+
+	Lexer(fileContents, tokens);
+	Parser(tokens, variables);
 
 	std::getline(std::cin, fileContents);
 

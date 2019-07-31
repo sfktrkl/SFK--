@@ -1,4 +1,5 @@
 #include "main.h"
+#include <regex>
 
 const void Lexer(const std::string& fileContents, toks& tokens)
 {
@@ -10,6 +11,10 @@ const void Lexer(const std::string& fileContents, toks& tokens)
 	bool isExpression = false;
 	bool variableStarted = false;
 	std::string variable = "";
+	bool isComment = false;
+
+	std::regex numbers("[0-9]");
+	std::regex operators("(\\+|\\*|\\-|\\/|\\%)");
 
 	for (char ch : fileContents)
 	{
@@ -132,12 +137,12 @@ const void Lexer(const std::string& fileContents, toks& tokens)
 			tokens.push_back(std::make_pair(TokenType::KEYWORD, token));
 			token = "";
 		}
-		else if (token == "0" || token == "1" || token == "2" || token == "3" || token == "4" || token == "5" || token == "6" || token == "7" || token == "8" || token == "9")
+		else if (std::regex_match(token, numbers))
 		{
 			expression += token;
 			token = "";
 		}
-		else if (token == "+" || token == "-" || token == "*" || token == "/" || token == "%")
+		else if (std::regex_match(token, operators))
 		{
 			isExpression = true;
 			expression += token;

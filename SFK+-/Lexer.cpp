@@ -24,6 +24,11 @@ const void Lexer(const std::string& fileContents, toks& tokens)
 				token = "";
 			}
 		}
+		else if (token == "#")
+		{
+			isComment = true;
+			token = "";
+		}
 		else if (token == "\n" || token == "<EOF>")
 		{
 			if (expression != "" && isExpression == true)
@@ -46,6 +51,11 @@ const void Lexer(const std::string& fileContents, toks& tokens)
 			if (token == "<EOF>")
 				return;
 
+			isComment = false;
+			token = "";
+		}
+		else if (isComment)
+		{
 			token = "";
 		}
 		else if (token == "=" && state == false)

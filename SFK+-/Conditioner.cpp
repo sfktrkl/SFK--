@@ -1,6 +1,6 @@
 #include "main.h"
 
-const void Conditioner(toks& tokens, std::vector<toks>& ifTokens) 
+const void Conditioner(toks& tokens, std::vector<toks>& ifTokens, vars& variables)
 {
 	bool conditionStarted = false;
 	bool insideCondition = false;
@@ -19,12 +19,12 @@ const void Conditioner(toks& tokens, std::vector<toks>& ifTokens)
 		{
 			std::string first, second;
 			if (tokens[i].first == TokenType::EXPRESSION)
-				first = EvaluateExpression(tokens[i].second);
+				first = EvaluateExpression(tokens[i].second, variables);
 			else if (tokens[i].first == TokenType::NUMBER)
 				first = tokens[i].second;
 
 			if (tokens[i + 2].first == TokenType::EXPRESSION)
-				second = EvaluateExpression(tokens[i + 2].second);
+				second = EvaluateExpression(tokens[i + 2].second, variables);
 			else if (tokens[i + 2].first == TokenType::NUMBER)
 				second = tokens[i + 2].second;
 

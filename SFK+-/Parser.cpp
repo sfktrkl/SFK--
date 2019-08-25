@@ -3,7 +3,7 @@
 const void Parser(toks& tokens, vars& variables)
 {
 	std::vector<toks> ifTokens;
-	Conditioner(tokens, ifTokens);
+	Conditioner(tokens, ifTokens, variables);
 
 	std::size_t i = 0;
 	while (i < tokens.size())
@@ -20,7 +20,7 @@ const void Parser(toks& tokens, vars& variables)
 				{
 					try
 					{
-						std::string result = EvaluateExpression(tokens[i + 1].second);
+						std::string result = EvaluateExpression(tokens[i + 1].second, variables);
 						Print(result);
 					}
 					catch (const char* result)
@@ -71,7 +71,7 @@ const void Parser(toks& tokens, vars& variables)
 						{
 							try
 							{
-								std::string result = EvaluateExpression(tokens[i + 2].second);
+								std::string result = EvaluateExpression(tokens[i + 2].second, variables);
 								variables[tokens[i].second].setData(VariableType::NUMBER, result);
 							}
 							catch (const char* result)
@@ -113,7 +113,7 @@ const void Parser(toks& tokens, vars& variables)
 					{
 						if (tokens[i + 2].first == TokenType::VARIABLE)
 						{
-							std::pair<VariableType, std::string> input = Scan();
+							std::pair<VariableType, std::string> input = Scan(variables);
 
 							if (checkKey(variables, tokens[i + 2].second))
 								variables[tokens[i + 2].second].setData(input.first, input.second);

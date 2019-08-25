@@ -94,6 +94,20 @@ const void Lexer(const std::string& fileContents, toks& tokens)
 			variableStarted = true;
 			token = "";
 		}
+        else if (std::regex_match(token, operators))
+        {
+            isExpression = true;
+            if (variable != "")
+            {
+                expression = "$" + variable + "$" + token;
+                variable = "";
+                variableStarted = false;
+            }
+            else
+            expression += token;
+
+            token = "";
+        }
 		else if (variableStarted == true)
 		{
 			if (token == "<")
@@ -139,12 +153,6 @@ const void Lexer(const std::string& fileContents, toks& tokens)
 		}
 		else if (std::regex_match(token, numbers))
 		{
-			expression += token;
-			token = "";
-		}
-		else if (std::regex_match(token, operators))
-		{
-			isExpression = true;
 			expression += token;
 			token = "";
 		}

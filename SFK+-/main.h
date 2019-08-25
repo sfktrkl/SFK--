@@ -46,9 +46,9 @@ typedef std::unordered_map<std::string, Variable> vars;
 
 void Print(std::string text, bool error = false);
 const std::string OpenFile(const char* filename);
-const std::string EvaluateExpression(std::string expression);
+const std::string EvaluateExpression(std::string expression, vars& variables);
 const void Lexer(const std::string& fileContents, toks& tokens);
-const void Conditioner(toks& tokens, std::vector<toks>& ifTokens);
+const void Conditioner(toks& tokens, std::vector<toks>& ifTokens, vars& variables);
 const void Parser(toks& tokens, vars& variables);
 const bool checkKey(const vars& variables, const std::string key);
-const std::pair<VariableType, std::string> Scan();
+const std::pair<VariableType, std::string> Scan(vars& variables);

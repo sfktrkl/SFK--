@@ -21,13 +21,15 @@ const std::string OpenFile(const char* filename)
 	return str;
 }
 
-const std::string EvaluateExpression(std::string expression)
+const std::string EvaluateExpression(std::string expression, vars& variables)
 {
 	expression += "q";
 	int result{};
 	int numberPosition{};
 	std::vector<int> numberStack;
 	std::vector<std::pair<char, std::vector<int>>> operatorStack;
+    bool variableStarted = false;
+    std::string variableName;
 	std::string number;
 
 	for (char& ch : expression) {
@@ -44,6 +46,16 @@ const std::string EvaluateExpression(std::string expression)
 			numberStack.push_back(std::stoi(number));
 			number = "";
 		}
+        else if (ch == '$')
+        {
+            if (variableStarted == false)
+                variableStarted = true;
+            else
+            {
+                number = variables[number].getValue();
+                variableStarted = false;
+            }
+        }
 		else
 		{
 			number += ch;
@@ -113,7 +125,7 @@ const bool checkKey(const vars& variables, const std::string key)
 	return true;
 }
 
-const std::pair<VariableType, std::string> Scan()
+const std::pair<VariableType, std::string> Scan(vars& variables)
 {
 	std::pair<VariableType, std::string> data;
 	std::string input;
@@ -136,7 +148,7 @@ const std::pair<VariableType, std::string> Scan()
 		else if (tokens[0].first == TokenType::EXPRESSION)
 		{
 			data.first = VariableType::NUMBER;
-			data.second = EvaluateExpression(tokens[0].second);
+			data.second = EvaluateExpression(tokens[0].second, variables);
 		}
 	}
 	else

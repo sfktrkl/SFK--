@@ -1,5 +1,5 @@
 $DOKTOR = 50
-$HASAN = $DOKTOR + 5
+$HASAN = 5 / 5 + $DOKTOR + 5
 YAZDIR $HASAN
 
 $DOKTOR = 50 + 5

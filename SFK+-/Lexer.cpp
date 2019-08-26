@@ -36,7 +36,16 @@ const void Lexer(const std::string& fileContents, toks& tokens)
 		}
 		else if (token == "\n" || token == "<EOF>")
 		{
-			if (expression != "" && isExpression == true)
+            if (expression != "" && isExpression == true && variable != "")
+            {
+                expression = expression + "$" + variable + "$";
+                tokens.push_back(std::make_pair(TokenType::EXPRESSION, expression));
+                expression = "";
+                variable = "";
+                isExpression = false;
+                variableStarted = false;
+            }
+            else if (expression != "" && isExpression == true)
 			{
 				tokens.push_back(std::make_pair(TokenType::EXPRESSION, expression));
 				expression = "";
@@ -99,12 +108,12 @@ const void Lexer(const std::string& fileContents, toks& tokens)
             isExpression = true;
             if (variable != "")
             {
-                expression = "$" + variable + "$" + token;
+                expression = expression + "$" + variable + "$" + token;
                 variable = "";
                 variableStarted = false;
             }
             else
-            expression += token;
+                expression += token;
 
             token = "";
         }
